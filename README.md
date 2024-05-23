@@ -21,7 +21,7 @@ Flow:
 1. Azure API Management logs the subscription id and request/response data to Event Hubs using an EventLogger policy.
 1. An Eventstream processor in Microsoft Fabric reads the data from Event Hubs.
 1. The output of the stream is writen to a delta table in a Lakehouse.
-1. The data in the delta table is then queried via a Power BI report.
+1. The data in the delta table is then queried via a Power BI report or a Notebook.
 
 Note, you can easily swap out the subscription key for tracking an individual user by using JWT tokens and associating the user with the token.  This would allow you to track usage at the user level.
 
