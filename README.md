@@ -1,14 +1,14 @@
-# Azure OpenAI Usage Tracking
+# AI-as-a-Service: Architecting GenAI Application Governance on Azure with Azure API Management and Microsoft Fabric
 
-This repo serves as a reference architecture for tracking usage of OpenAI models on Azure. Many organizations want to understand OpenAI metrics, including what models are being used, by whom, and how often.  They also want to track tokens being consumed, and the prompts being passed in.  This leads to the ability to create chargeback models for consuming applications and users and enables analysis to be done on prompt usage and best practices.  Azure API Management recently announced a new [policy](https://learn.microsoft.com/azure/api-management/azure-openai-emit-token-metric-policy) to send token information to App Insights.  This is a great feature, but doesn't enable long term usage analysis.  This architecture provides a way to track all of the data needed to understand OpenAI usage in a scalable and cost-effective manner.
+This repo serves as a reference architecture for tracking usage of AI models on Azure. Many organizations want to understand AI metrics, including what models are being used, by whom, and how often.  They also want to track tokens being consumed, and the prompts being passed in.  This leads to the ability to create chargeback models for consuming applications and users and enables analysis to be done on prompt usage and best practices.  Azure API Management recently announced a new [policy](https://learn.microsoft.com/azure/api-management/azure-openai-emit-token-metric-policy) to send token information to App Insights.  This is a great feature, but doesn't enable long term usage analysis.  This architecture provides a way to track all of the data needed to understand OpenAI usage in a scalable and cost-effective manner.
 
 ## Architecture Overview
 
 Azure API Management serves as the cornerstone for this architecture as it enables different consumer access to the same OpenAI endpoint through the use of subscriptions or jwt tokens.  APIM policy also allow the [logging](https://learn.microsoft.com/azure/api-management/api-management-howto-log-event-hubs) of request/response data to Event Hubs so that it can be processed outside of the request/response path.  The data generated is suitable for analytics queries, so rather than land it in a traditional database, Microsoft Fabric becomes a cost-effective and scalable solution for storing the data.  Power BI can then be used to create reports on the data in the Lakehouse. 
 
-The architecture consists of the following components:
+The reference implementation consists of the following components:
 
-1. **Azure OpenAI**: These are the models that are exposed as APIs using Azure API Management. 
+1. **Azure OpenAI**: These are the models that are exposed as APIs using Azure API Management.  You could deploy any combination of models through Azure AI Studio
 1. **Azure API Management**: This is used to expose the OpenAI models as APIs and track usage data.
 1. **Event Hubs**: This is used to ingest usage data from Azure API Management.
 1. **Microsoft Fabric**: This is used to process and store the usage data in a scalable and cost-effective manner.
@@ -18,7 +18,7 @@ The architecture consists of the following components:
 Flow:
 1. A client makes a request to an OpenAI model through Azure API Management using a subscription key.
 1. Azure API Management forwards the request to the OpenAI model.
-1. Azure API Management logs the subscription id and request/response data to Event Hubs using an EventLogger policy.
+1. Azure API Management logs the subscription id and request/response data to Event Hubs using a log-to-eventhub policy.
 1. An Eventstream processor in Microsoft Fabric reads the data from Event Hubs.
 1. The output of the stream is writen to a delta table in a Lakehouse.
 1. The data in the delta table is then queried via a Power BI report or a Notebook.
