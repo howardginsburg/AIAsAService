@@ -109,7 +109,7 @@ At the time of this writing, connecting to an Event Hub from Fabric must be done
 1. Create a new Event stream in the workspace
     - The source will be the 'ai-usage' Event Hub.
     - The destination will be a new managed Delta table in the Lakehouse called 'AIData'.
-    ![Eventstream](/images/eventstream.png)
+    ![Eventstream](/images/EventStream.png)
 1. Invoke your OpenAI APIM endpoint several times to send some test data in.  You should see the Delta table created and data in it.
     ![Delta Table](/images/deltatable.png)
 
